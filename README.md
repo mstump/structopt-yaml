@@ -1,7 +1,6 @@
 # structopt-yaml
 
-An default value loader from YAML for structopt.
-It combinates with [structopt](https://github.com/TeXitoi/structopt).
+An default value loader from YAML for structopt. Derived from [structopt-toml](https://github.com/dalance/structopt-toml). It combinates with [structopt](https://github.com/TeXitoi/structopt).
 
 [![Actions Status](https://github.com/mstump/structopt-yaml/workflows/Rust/badge.svg)](https://github.com/mstump/structopt-yaml/actions)
 [![Crates.io](https://img.shields.io/crates/v/structopt-yaml.svg)](https://crates.io/crates/structopt-yaml)
