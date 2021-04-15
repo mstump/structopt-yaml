@@ -4,7 +4,7 @@ An default value loader from YAML or JSON for structopt. It combinates with [str
 
 [![Crates.io](https://img.shields.io/crates/v/structopt-yaml.svg)](https://crates.io/crates/structopt-yaml)
 [![Docs.rs](https://docs.rs/structopt-yaml/badge.svg)](https://docs.rs/structopt-yaml)
-[![codecov](https://codecov.io/gh/mstump/structopt-yaml/branch/master/graph/badge.svg)](https://codecov.io/gh/mstump/structopt-yaml)
+[![codecov](https://codecov.io/gh/mstump/structopt-yaml/branch/main/graph/badge.svg)](https://codecov.io/gh/mstump/structopt-yaml)
 
 ## Usage
 
@@ -16,7 +16,7 @@ serde          = "1.0"
 serde_derive   = "1.0"
 serde_yaml     = "0.8.17"
 structopt      = "0.3.11"
-structopt-yaml = "0.4.5"
+structopt-yaml = "0.4.6"
 ```
 
 ## Example

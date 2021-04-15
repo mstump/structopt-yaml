@@ -9,10 +9,10 @@ license = "MIT OR Apache-2.0"
 name = "structopt-yaml"
 readme = "../README.md"
 repository = "https://github.com/mstump/structopt-yaml"
-version = "0.4.5"
+version = "0.4.6"
 
 [badges]
-codecov = {repository = "mstump/structopt-yaml", branch = "master", service = "github"}
+codecov = {repository = "mstump/structopt-yaml", branch = "main", service = "github"}
 travis-ci = {repository = "mstump/structopt-yaml"}
 
 [features]
@@ -25,7 +25,7 @@ serde = {version = "1.0", features = ["derive"]}
 serde_derive = {version = "1.0"}
 serde_yaml = "0.8"
 structopt = {version = "0.3.21", default-features = false}
-structopt-yaml-derive = {version = "^0.4.5", path = "../structopt-yaml-derive"}
+structopt-yaml-derive = {version = "^0.4.6", path = "../structopt-yaml-derive"}
 
 [build-dependencies]
 skeptic = "0.13"
