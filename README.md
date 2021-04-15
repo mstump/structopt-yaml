@@ -1,6 +1,6 @@
 # structopt-yaml
 
-An default value loader from YAML for structopt. Derived from [structopt-toml](https://github.com/dalance/structopt-toml). It combinates with [structopt](https://github.com/TeXitoi/structopt).
+An default value loader from YAML or JSON for structopt. It combinates with [structopt](https://github.com/TeXitoi/structopt). Derived from [structopt-toml](https://github.com/dalance/structopt-toml).
 
 [![Crates.io](https://img.shields.io/crates/v/structopt-yaml.svg)](https://crates.io/crates/structopt-yaml)
 [![Docs.rs](https://docs.rs/structopt-yaml/badge.svg)](https://docs.rs/structopt-yaml)
@@ -59,12 +59,10 @@ b:0
 
 ## License
 
-Licensed under either of
+Licensed under either of at your option.
 
 * Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or <http://www.apache.org/licenses/LICENSE-2.0>)
 * MIT license ([LICENSE-MIT](LICENSE-MIT) or <http://opensource.org/licenses/MIT>)
-
-at your option.
 
 ### Contribution
 
