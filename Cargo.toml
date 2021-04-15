@@ -1,5 +1,5 @@
 [workspace]
 members = [
-    "structopt-toml",
-    "structopt-toml-derive",
+  "structopt-yaml",
+  "structopt-yaml-derive",
 ]

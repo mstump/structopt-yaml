@@ -5,20 +5,19 @@ extern crate quote;
 
 use proc_macro::TokenStream;
 use proc_macro2::TokenTree;
+use syn::parse::{Parse, ParseStream};
 use syn::punctuated::Punctuated;
 use syn::token::Comma;
-use syn::parse::{ParseStream, Parse};
-use syn::{DataStruct, DeriveInput, Field, Ident, LitStr, buffer::Cursor};
+use syn::{buffer::Cursor, DataStruct, DeriveInput, Field, Ident, LitStr};
 
-
-#[proc_macro_derive(StructOptToml, attributes(structopt))]
-pub fn structopt_toml(input: TokenStream) -> TokenStream {
+#[proc_macro_derive(StructOptYaml, attributes(structopt))]
+pub fn structopt_yaml(input: TokenStream) -> TokenStream {
     let input: DeriveInput = syn::parse(input).unwrap();
-    let gen = impl_structopt_toml(&input);
+    let gen = impl_structopt_yaml(&input);
     gen.into()
 }
 
-fn impl_structopt_toml(input: &DeriveInput) -> proc_macro2::TokenStream {
+fn impl_structopt_yaml(input: &DeriveInput) -> proc_macro2::TokenStream {
     use syn::Data::*;
 
     let struct_name = &input.ident;
@@ -27,7 +26,7 @@ fn impl_structopt_toml(input: &DeriveInput) -> proc_macro2::TokenStream {
             fields: syn::Fields::Named(ref fields),
             ..
         }) => impl_structopt_for_struct(struct_name, &fields.named),
-        _ => panic!("structopt_toml only supports non-tuple struct"),
+        _ => panic!("structopt_yaml only supports non-tuple struct"),
     };
 
     quote!(#inner_impl)
@@ -40,11 +39,11 @@ fn impl_structopt_for_struct(
     let merged_fields = gen_merged_fields(fields);
 
     quote! {
-        impl ::structopt_toml::StructOptToml for #name {
-            fn merge<'a>(from_toml: Self, from_args: Self, args: &::structopt_toml::clap::ArgMatches) -> Self where
+        impl ::structopt_yaml::StructOptYaml for #name {
+            fn merge<'a>(from_yaml: Self, from_args: Self, args: &::structopt_yaml::clap::ArgMatches) -> Self where
                 Self: Sized,
-                Self: ::structopt_toml::structopt::StructOpt,
-                Self: ::structopt_toml::serde::de::Deserialize<'a>
+                Self: ::structopt_yaml::structopt::StructOpt,
+                Self: ::structopt_yaml::serde::de::Deserialize<'a>
             {
                 Self {
                     #merged_fields
@@ -66,7 +65,7 @@ fn gen_merged_fields(fields: &Punctuated<Field, Comma>) -> proc_macro2::TokenStr
 
         // If the field is decorated with `#[structopt(flatten)]` we have to treat it differently.
         // We can't check its existence with `args.is_present` and `args.occurrences_of`
-        // and instead we delegate and call its own `StructOptToml` implementation of `merge`
+        // and instead we delegate and call its own `StructOptYaml` implementation of `merge`
         let is_flatten = is_flatten(field);
 
         // by default the clap arg name is the field name, unless overwritten with `name=<value>`
@@ -77,8 +76,8 @@ fn gen_merged_fields(fields: &Punctuated<Field, Comma>) -> proc_macro2::TokenStr
         if is_flatten {
             quote!(
                 #field_name: {
-                    <#field_type as ::structopt_toml::StructOptToml>::merge(
-                        from_toml.#field_name,
+                    <#field_type as ::structopt_yaml::StructOptYaml>::merge(
+                        from_yaml.#field_name,
                         from_args.#field_name,
                         args
                     )
@@ -90,7 +89,7 @@ fn gen_merged_fields(fields: &Punctuated<Field, Comma>) -> proc_macro2::TokenStr
                     if args.is_present(#structopt_name) && args.occurrences_of(#structopt_name) > 0 {
                         from_args.#field_name
                     } else {
-                        from_toml.#field_name
+                        from_yaml.#field_name
                     }
                 }
             )
@@ -148,7 +147,6 @@ fn is_flatten(field: &Field) -> bool {
         .unwrap_or(false)
 }
 
-
 #[derive(Debug)]
 struct NameVal(String);
 
@@ -168,7 +166,9 @@ impl Parse for NameVal {
                     TokenTree::Ident(ident) if ident == "name" && state == Match::NameToken => {
                         state = Match::PunctEq;
                     }
-                    TokenTree::Punct(punct) if punct.as_char() == '=' && state == Match::PunctEq => {
+                    TokenTree::Punct(punct)
+                        if punct.as_char() == '=' && state == Match::PunctEq =>
+                    {
                         state = Match::LitVal;
                     }
                     TokenTree::Literal(lit) if state == Match::LitVal => {
@@ -183,6 +183,8 @@ impl Parse for NameVal {
             }
             Err(cursor.error("End reached"))
         });
-        result.map(|lit| Self(lit)).map_err(|_| input.error("Not found"))
+        result
+            .map(|lit| Self(lit))
+            .map_err(|_| input.error("Not found"))
     }
 }

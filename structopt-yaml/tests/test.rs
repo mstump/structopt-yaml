@@ -1,8 +1,8 @@
 use serde_derive::Deserialize;
 use structopt::StructOpt;
-use structopt_toml::StructOptToml;
+use structopt_yaml::StructOptYaml;
 
-#[derive(Debug, Deserialize, StructOpt, StructOptToml)]
+#[derive(Debug, Deserialize, StructOpt, StructOptYaml)]
 #[serde(default)]
 struct Test {
     #[structopt(default_value = "0", long = "a0")]
@@ -47,21 +47,21 @@ struct Test {
 
 #[test]
 fn test() {
-    let toml_str = r#"
-        a2 = 102
-        a3 = 103
-        b2 = 112
-        b3 = 113
-        c2 = 122
-        c3 = 123
-        d2 = [132]
-        d3 = [133]
+    let yaml_str = r#"
+        a2: 102
+        a3: 103
+        b2: 112
+        b3: 113
+        c2: 122
+        c3: 123
+        d2: [132]
+        d3: [133]
     "#;
     let args = vec![
         "test", "--a1", "201", "--a3", "203", "--b1", "211", "--b3", "213", "--c1", "221", "--c3",
         "223", "--d1", "231", "--d3", "233",
     ];
-    let test = Test::from_iter_with_toml(toml_str, args.iter()).unwrap();
+    let test = Test::from_iter_with_yaml(yaml_str, args.iter()).unwrap();
     assert_eq!(test.a0, 0);
     assert_eq!(test.a1, 201);
     assert_eq!(test.a2, 102);
@@ -74,16 +74,15 @@ fn test() {
     assert_eq!(test.c1, Some(221));
     assert_eq!(test.c2, Some(122));
     assert_eq!(test.c3, Some(223));
-    assert_eq!(test.d0, vec![]);
+    assert_eq!(test.d0, [] as [i32; 0]);
     assert_eq!(test.d1, vec![231]);
     assert_eq!(test.d2, vec![132]);
     assert_eq!(test.d3, vec![233]);
 }
 
-
 static POSSIBLE_VALUES: &[&str] = &["one", "two"];
 
-#[derive(Debug, Deserialize, StructOpt, StructOptToml)]
+#[derive(Debug, Deserialize, StructOpt, StructOptYaml)]
 #[serde(default)]
 struct Bar {
     #[structopt(possible_values = POSSIBLE_VALUES, name = "bar")]
@@ -92,26 +91,26 @@ struct Bar {
 
 #[test]
 fn test_args_with_other_attributes() {
-    let toml_str = r#"
-    bar = "one"
+    let yaml_str = r#"
+    bar: "one"
     "#;
-    let test = Bar::from_args_with_toml(toml_str);
+    let test = Bar::from_args_with_yaml(yaml_str);
     match dbg!(test) {
         Err(_) => assert!(false),
         _ => assert!(true),
     }
 }
 
-#[derive(Debug, Deserialize, StructOpt, StructOptToml)]
+#[derive(Debug, Deserialize, StructOpt, StructOptYaml)]
 #[serde(default)]
 struct Outer {
     #[structopt(long = "one", default_value = "1")]
     one: u32,
     #[structopt(flatten)]
-    two: Inner
+    two: Inner,
 }
 
-#[derive(Debug, Deserialize, StructOpt, StructOptToml)]
+#[derive(Debug, Deserialize, StructOpt, StructOptYaml)]
 struct Inner {
     #[structopt(long = "three", default_value = "1")]
     three: u32,
@@ -120,29 +119,15 @@ struct Inner {
 }
 
 #[test]
-fn test_flatten_args() {
-    let toml_str = r#"
-        one = 2
-        two.three = 2
-        two.four = 2
-    "#;
-    let args = vec!["test", "--four", "3"];
-    let test = Outer::from_iter_with_toml(toml_str, args.iter()).unwrap();
-    assert_eq!(test.one, 2);
-    assert_eq!(test.two.three, 2);
-    assert_eq!(test.two.four, 3);
-}
-
-#[test]
-fn test_toml_failed() {
-    let toml_str = r#"
-        a2 = "aaa"
-        a3 = [102]
-        c3 = 123
-        d2 = 132
+fn test_yaml_failed() {
+    let yaml_str = r#"
+        a2: "aaa"
+        a3: [102]
+        c3: 123
+        d2: 132
     "#;
     let args = vec!["test"];
-    let test = Test::from_iter_with_toml(toml_str, args.iter());
+    let test = Test::from_iter_with_yaml(yaml_str, args.iter());
     match test {
         Err(_) => assert!(true),
         _ => assert!(false),
@@ -150,18 +135,18 @@ fn test_toml_failed() {
 }
 
 #[test]
-fn test_toml_args() {
-    let toml_str = r#"
-        a2 = 102
-        a3 = 103
-        b2 = 112
-        b3 = 113
-        c2 = 122
-        c3 = 123
-        d2 = [132]
-        d3 = [133]
+fn test_yaml_args() {
+    let yaml_str = r#"
+        a2: 102
+        a3: 103
+        b2: 112
+        b3: 113
+        c2: 122
+        c3: 123
+        d2: [132]
+        d3: [133]
     "#;
-    let test = Test::from_args_with_toml(toml_str).unwrap();
+    let test = Test::from_args_with_yaml(yaml_str).unwrap();
     assert_eq!(test.a0, 0);
     assert_eq!(test.a1, 1);
     assert_eq!(test.a2, 102);
@@ -174,8 +159,8 @@ fn test_toml_args() {
     assert_eq!(test.c1, None);
     assert_eq!(test.c2, Some(122));
     assert_eq!(test.c3, Some(123));
-    assert_eq!(test.d0, vec![]);
-    assert_eq!(test.d1, vec![]);
+    assert_eq!(test.d0, [] as [i32; 0]);
+    assert_eq!(test.d1, [] as [i32; 0]);
     assert_eq!(test.d2, vec![132]);
     assert_eq!(test.d3, vec![133]);
 }

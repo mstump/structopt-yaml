@@ -1,0 +1,21 @@
+[package]
+authors = ["mstump@gmail.com", "matthew.t.stump@gmail.com"]
+categories = ["command-line-interface"]
+description = "A derive crate of structopt-yaml"
+edition = "2018"
+keywords = ["cli", "structopt", "clap", "derive"]
+license = "MIT OR Apache-2.0"
+name = "structopt-yaml-derive"
+repository = "https://github.com/mstump/structopt-yaml"
+version = "0.4.5"
+
+[package.metadata.release]
+disable-tag = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "1.0.10"
+quote = "1.0.3"
+syn = "1.0.18"

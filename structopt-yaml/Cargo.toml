@@ -1,0 +1,39 @@
+[package]
+authors = ["matthew.t.stump@gmail.com"]
+build = "build.rs"
+categories = ["command-line-interface"]
+description = "An default value loader from YAML for structopt"
+edition = "2018"
+keywords = ["cli", "structopt", "clap", "derive"]
+license = "MIT OR Apache-2.0"
+name = "structopt-yaml"
+readme = "../README.md"
+repository = "https://github.com/mstump/structopt-yaml"
+version = "0.4.5"
+
+[badges]
+codecov = {repository = "mstump/structopt-yaml", branch = "master", service = "github"}
+travis-ci = {repository = "mstump/structopt-yaml"}
+
+[features]
+default = ["clap/default", "structopt/default"]
+
+[dependencies]
+clap = {version = "2.33", default-features = false}
+failure = "0.1.7"
+serde = {version = "1.0", features = ["derive"]}
+serde_derive = {version = "1.0"}
+serde_yaml = "0.8"
+structopt = {version = "0.3.21", default-features = false}
+structopt-yaml-derive = {version = "^0.4.5", path = "../structopt-yaml-derive"}
+
+[build-dependencies]
+skeptic = "0.13"
+
+[dev-dependencies]
+skeptic = "0.13"
+
+[package.metadata.release]
+pre-release-replacements = [
+  {file = "../README.md", search = "structopt-yaml = \"[a-z0-9\\.-]+\"", replace = "structopt-yaml = \"{{version}}\""},
+]
